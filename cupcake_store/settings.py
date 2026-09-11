@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     # Terceiros
     'crispy_forms',
     'crispy_bootstrap5',
+    # Apps do projeto
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -85,6 +87,7 @@ DATABASES = {
     }
 }
 
+AUTH_USER_MODEL = 'accounts.Usuario'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -109,13 +112,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = 'pt-br'
-
 TIME_ZONE = 'America/Sao_Paulo'
-
 USE_I18N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
@@ -137,3 +136,4 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'catalog:vitrine'
+
