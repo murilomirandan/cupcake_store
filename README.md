@@ -1,6 +1,6 @@
 # 🧁 Cupcakes Gourmet — Loja Virtual
 
-Aplicativo de venda online de cupcakes gourmet desenvolvido em **Django** como Projeto Integrador Transdisciplinar em Engenharia de Software I.
+Aplicativo de venda online de cupcakes gourmet desenvolvido em **Django** como Projeto Integrador Transdisciplinar em Engenharia de Software II.
 
 ## 📋 Funcionalidades
 
@@ -65,8 +65,3 @@ cupcake_store/
 ├── reviews/       # Avaliações
 └── templates/     # Templates HTML
 ```
-
-## 👤 Autor
-
-**Seu Nome** — RGM: 34424962
-Curso: Engenharia de Software
