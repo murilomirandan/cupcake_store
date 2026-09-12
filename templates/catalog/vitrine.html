@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Vitrine{% endblock %}
+{% block content %}
+<h1 class="mb-4">Nossos Cupcakes</h1>
+
+<form method="get" class="row g-2 mb-4">
+    <div class="col-md-6">
+        <input type="text" name="q" value="{{ busca }}" class="form-control" placeholder="Buscar...">
+    </div>
+    <div class="col-md-4">
+        <select name="categoria" class="form-select">
+            <option value="">Todas as categorias</option>
+            {% for cat in categorias %}
+            <option value="{{ cat.id }}" {% if cat.selecionada %}selected{% endif %}>
+                {{ cat.nome }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-md-2">
+        <button class="btn btn-primary w-100">Filtrar</button>
+    </div>
+</form>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for c in cupcakes %}
+    <div class="col">
+        <div class="card h-100">
+            {% if c.imagemUrl %}
+            <img src="{{ c.imagemUrl.url }}" class="card-img-top" style="height:180px;object-fit:cover;">
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ c.nome }}</h5>
+                <p class="text-muted small">{{ c.sabor }}</p>
+                <p class="fw-bold text-success">R$ {{ c.preco }}</p>
+                <a href="{% url 'catalog:detalhe' c.id %}" class="btn btn-sm btn-outline-primary">Ver detalhes</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p class="text-muted">Nenhum cupcake cadastrado ainda.</p>
+    {% endfor %}
+</div>
+{% endblock %}
