@@ -17,4 +17,9 @@ def criar_pedido(cliente, carrinho):
     carrinho.itens.all().delete()
     carrinho.valorTotal = Decimal('0.00')
     carrinho.save()
+    
+    # Notifica o cliente (US18)
+    from notifications.services import notificar_confirmacao_pedido
+    notificar_confirmacao_pedido(pedido)
+    
     return pedido

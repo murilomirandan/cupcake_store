@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Notificações{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">🔔 Notificações</h1>
+
+{% if notificacoes %}
+<div class="list-group">
+    {% for n in notificacoes %}
+    <div class="list-group-item {% if not n.lida %}list-group-item-info{% endif %}">
+        <div class="d-flex w-100 justify-content-between">
+            <h6 class="mb-1">{{ n.titulo }}</h6>
+            <small class="text-muted">{{ n.criado_em|date:"d/m H:i" }}</small>
+        </div>
+        <p class="mb-1">{{ n.mensagem }}</p>
+        {% if not n.lida %}
+        <a href="{% url 'notifications:marcar_lida' n.id %}" class="btn btn-sm btn-outline-secondary mt-1">Marcar como
+            lida</a>
+        {% endif %}
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<p class="text-muted">Nenhuma notificação por aqui.</p>
+{% endif %}
+{% endblock %}

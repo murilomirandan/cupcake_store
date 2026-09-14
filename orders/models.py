@@ -39,3 +39,10 @@ class ItemPedido(models.Model):
     quantidade = models.PositiveIntegerField()
     precoUnitario = models.DecimalField(max_digits=8, decimal_places=2)
     subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    
+
+def alterarStatus(self, novo_status):
+    self.status = novo_status
+    self.save()
+    from notifications.services import notificar_atualizacao_status
+    notificar_atualizacao_status(self)

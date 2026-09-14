@@ -27,6 +27,16 @@
                     {% if user.is_authenticated %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'orders:meus_pedidos' %}">Meus Pedidos</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link position-relative" href="{% url 'notifications:listar' %}">
+                            🔔 Notificações
+                            {% if user.notificacoes.count %}
+                            <span class="badge bg-danger rounded-pill">
+                                {{ user.notificacoes.all|length }}
+                            </span>
+                            {% endif %}
+                        </a>
+                    </li>
                     {% endif %}
                 </ul>
                 <ul class="navbar-nav">
