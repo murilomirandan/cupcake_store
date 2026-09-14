@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Finalizar Pedido</h1>
+<table class="table">
+    {% for item in carrinho.itens.all %}
+    <tr>
+        <td>{{ item.quantidade }}x {{ item.cupcake.nome }}</td>
+        <td>R$ {{ item.subtotal }}</td>
+    </tr>
+    {% endfor %}
+    <tfoot>
+        <tr>
+            <th>Total</th>
+            <th>R$ {{ carrinho.valorTotal }}</th>
+        </tr>
+    </tfoot>
+</table>
+<form method="post">
+    {% csrf_token %}
+    <button class="btn btn-success btn-lg">Confirmar Pedido</button>
+</form>
+{% endblock %}

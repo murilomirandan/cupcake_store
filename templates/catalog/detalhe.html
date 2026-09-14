@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block title %}{{ cupcake.nome }}{% endblock %}
+
+{% block content %}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'catalog:vitrine' %}">Vitrine</a></li>
+        <li class="breadcrumb-item active">{{ cupcake.nome }}</li>
+    </ol>
+</nav>
+
+<div class="row g-5">
+    <div class="col-md-6">
+        <div class="detalhe-imagem shadow-sm">
+            {% if cupcake.imagemUrl %}
+            <img src="{{ cupcake.imagemUrl.url }}" class="img-fluid rounded" alt="{{ cupcake.nome }}">
+            {% else %}
+            <div class="sem-imagem-grande">🧁</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        {% if cupcake.destaque %}
+        <span class="badge bg-warning text-dark mb-2">⭐ Destaque</span>
+        {% endif %}
+
+        <h1 class="mb-2">{{ cupcake.nome }}</h1>
+        <p class="text-muted">{{ cupcake.descricao }}</p>
+        <p class="preco-grande">R$ {{ cupcake.preco }}</p>
+
+        <hr>
+
+        <div class="row mb-3">
+            <div class="col-6"><strong>Sabor:</strong><br>{{ cupcake.sabor }}</div>
+            <div class="col-6"><strong>Massa:</strong><br>{{ cupcake.massa }}</div>
+            {% if cupcake.recheio %}
+            <div class="col-6 mt-2"><strong>Recheio:</strong><br>{{ cupcake.recheio }}</div>
+            {% endif %}
+            {% if cupcake.cobertura %}
+            <div class="col-6 mt-2"><strong>Cobertura:</strong><br>{{ cupcake.cobertura }}</div>
+            {% endif %}
+            <div class="col-6 mt-2"><strong>Calorias:</strong><br>{{ cupcake.calorias }} kcal</div>
+        </div>
+
+        <h5 class="mt-4">🧂 Ingredientes</h5>
+        <ul class="list-group list-group-flush mb-3">
+            {% for ing in ingredientes %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ ing.nome }}
+                {% if ing.alergenico %}
+                <span class="badge bg-warning text-dark">⚠️ {{ ing.tipoAlergia }}</span>
+                {% endif %}
+            </li>
+            {% empty %}
+            <li class="list-group-item text-muted">Informação não disponível.</li>
+            {% endfor %}
+        </ul>
+
+        {% if alergenicos %}
+        <div class="alert alert-warning">
+            <strong>⚠️ Atenção:</strong> Este produto contém alérgenos.
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'cart:adicionar' cupcake.id %}" class="mt-4">
+            {% csrf_token %}
+            <div class="row g-2 align-items-center">
+                <div class="col-auto">
+                    <label class="form-label mb-0 small">Qtd:</label>
+                    <input type="number" name="quantidade" value="1" min="1" class="form-control form-control-lg"
+                        style="width:90px;">
+                </div>
+                <div class="col">
+                    <button class="btn btn-primary btn-lg w-100">
+                        🛒 Adicionar ao carrinho
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <a href="{% url 'catalog:vitrine' %}" class="btn btn-link mt-3">← Voltar à vitrine</a>
+    </div>
+</div>
+{% endblock %}

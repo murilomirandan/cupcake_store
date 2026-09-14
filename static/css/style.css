@@ -1,0 +1,191 @@
+/* ============ RESET E VARIÁVEIS ============ */
+:root {
+    --cor-primaria: #d63384;
+    /* rosa cupcake */
+    --cor-secundaria: #6f42c1;
+    /* roxo gourmet */
+    --cor-destaque: #ffb703;
+    /* amarelo doce */
+    --cor-fundo: #fff8f3;
+    /* bege suave */
+    --cor-texto: #3d3d3d;
+}
+
+body {
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
+}
+
+/* ============ NAVBAR ============ */
+.navbar-cupcake {
+    background: linear-gradient(90deg, var(--cor-primaria), var(--cor-secundaria));
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-cupcake .navbar-brand {
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: #fff !important;
+}
+
+.navbar-cupcake .nav-link {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-weight: 500;
+    transition: color .2s;
+}
+
+.navbar-cupcake .nav-link:hover {
+    color: var(--cor-destaque) !important;
+}
+
+/* ============ HERO ============ */
+.hero-cupcake {
+    background-image:
+        linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.55)),
+        url('https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=1600');
+    background-size: cover;
+    background-position: center;
+    padding: 5rem 1rem;
+    border-radius: 1rem;
+    margin-bottom: 2rem;
+}
+
+.hero-cupcake h1 {
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* ============ CARDS DE CUPCAKE ============ */
+.cupcake-card {
+    border-radius: 1rem;
+    overflow: hidden;
+    transition: transform .25s ease, box-shadow .25s ease;
+    background: #fff;
+}
+
+.cupcake-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(214, 51, 132, 0.15) !important;
+}
+
+.cupcake-img-wrapper {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+    background: #fdf0f5;
+}
+
+.cupcake-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform .4s ease;
+}
+
+.cupcake-card:hover .cupcake-img-wrapper img {
+    transform: scale(1.06);
+}
+
+.badge-destaque {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: var(--cor-destaque);
+    color: #000;
+    font-weight: 600;
+    padding: .35rem .7rem;
+    border-radius: 999px;
+    font-size: .75rem;
+}
+
+.sem-imagem {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: #e5b8cd;
+}
+
+.sem-imagem-grande {
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 6rem;
+    color: #e5b8cd;
+    background: #fdf0f5;
+    border-radius: 1rem;
+}
+
+.preco {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--cor-primaria);
+}
+
+.preco-grande {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--cor-primaria);
+    margin: .5rem 0;
+}
+
+/* ============ BOTÕES ============ */
+.btn-primary {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+    font-weight: 600;
+    border-radius: .5rem;
+}
+
+.btn-primary:hover {
+    background-color: #b02a6d;
+    border-color: #b02a6d;
+}
+
+.btn-outline-primary {
+    color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--cor-primaria);
+    border-color: var(--cor-primaria);
+}
+
+/* ============ DETALHE ============ */
+.detalhe-imagem img {
+    width: 100%;
+    border-radius: 1rem;
+}
+
+/* ============ RODAPÉ ============ */
+.footer-cupcake {
+    background: linear-gradient(90deg, var(--cor-secundaria), var(--cor-primaria));
+    color: #fff;
+    padding: 2rem 0;
+    margin-top: 4rem;
+}
+
+.footer-cupcake a {
+    color: var(--cor-destaque);
+    text-decoration: none;
+}
+
+/* ============ ANIMAÇÕES SUAVES ============ */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cupcake-card {
+    animation: fadeInUp .45s ease both;
+}

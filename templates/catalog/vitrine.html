@@ -1,48 +1,140 @@
 {% extends 'base.html' %}
-{% block title %}Vitrine{% endblock %}
+{% load static %}
+{% block title %}Nossos Cupcakes{% endblock %}
+
 {% block content %}
-<h1 class="mb-4">Nossos Cupcakes</h1>
 
-<form method="get" class="row g-2 mb-4">
-    <div class="col-md-6">
-        <input type="text" name="q" value="{{ busca }}" class="form-control" placeholder="Buscar...">
+<!-- Hero section -->
+<section class="hero-cupcake text-center text-white mb-5">
+    <div class="hero-overlay">
+        <h1 class="display-4 fw-bold">🧁 Cupcakes Gourmet</h1>
+        <p class="lead">Feitos com amor, entregues com carinho</p>
+        <a href="#vitrine" class="btn btn-light btn-lg mt-2">Ver Cupcakes</a>
     </div>
-    <div class="col-md-4">
-        <select name="categoria" class="form-select">
-            <option value="">Todas as categorias</option>
-            {% for cat in categorias %}
-            <option value="{{ cat.id }}" {% if cat.selecionada %}selected{% endif %}>
-                {{ cat.nome }}
-            </option>
-            {% endfor %}
-        </select>
-    </div>
-    <div class="col-md-2">
-        <button class="btn btn-primary w-100">Filtrar</button>
-    </div>
-</form>
+</section>
 
-<div class="row row-cols-1 row-cols-md-3 g-4">
-    {% for c in cupcakes %}
-    <div class="col">
-        <div class="card h-100">
-            {% if c.imagemUrl %}
-            <img src="{{ c.imagemUrl.url }}" class="card-img-top" style="height:180px;object-fit:cover;">
-            {% endif %}
-            <div class="card-body">
-                <h5 class="card-title">{{ c.nome }}</h5>
-                <p class="text-muted small">{{ c.sabor }}</p>
-                <p class="fw-bold text-success">R$ {{ c.preco }}</p>
-                <a href="{% url 'catalog:detalhe' c.id %}" class="btn btn-sm btn-outline-primary">Ver detalhes</a>
-            </div>
-            <form method="post" action="{% url 'cart:adicionar' c.id %}" class="mt-2">
-                {% csrf_token %}
-                <button class="btn btn-sm btn-primary w-100">Adicionar ao carrinho</button>
-            </form>
+<!-- Filtros -->
+<section class="mb-4">
+    <form method="get" class="row g-2 justify-content-center">
+        <div class="col-md-5">
+            <input type="text" name="q" value="{{ busca }}" class="form-control form-control-lg"
+                placeholder="🔍 Buscar cupcake...">
         </div>
+        <div class="col-md-4">
+            <select name="categoria" class="form-select form-select-lg">
+                <option value="">Todas as categorias</option>
+                {% for cat in categorias %}
+                <option value="{{ cat.id }}" {% if categoria_selecionada == cat.id|stringformat:"s" %}selected{% endif %}>
+                    {{ cat.nome }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary btn-lg w-100">Filtrar</button>
+        </div>
+    </form>
+</section>
+
+<!-- Destaques -->
+{% if destaques %}
+<section class="mb-5">
+    <h2 class="mb-4 text-center">⭐ Destaques da Semana</h2>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for c in destaques %}
+        <div class="col">
+            <div class="card cupcake-card h-100 border-0 shadow-sm">
+                <div class="cupcake-img-wrapper">
+                    {% if c.imagemUrl %}
+                    <img src="{{ c.imagemUrl.url }}" class="card-img-top" alt="{{ c.nome }}">
+                    {% else %}
+                    <div class="sem-imagem">🧁</div>
+                    {% endif %}
+                    <span class="badge-destaque">⭐ Destaque</span>
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ c.nome }}</h5>
+                    <p class="text-muted small mb-2">{{ c.sabor }}</p>
+                    <p class="card-text small text-secondary">{{ c.descricao|truncatewords:12 }}</p>
+                    <p class="preco mt-auto">R$ {{ c.preco }}</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'catalog:detalhe' c.id %}" class="btn btn-outline-primary">
+                            Ver detalhes
+                        </a>
+                        <form method="post" action="{% url 'cart:adicionar' c.id %}">
+                            {% csrf_token %}
+                            <button class="btn btn-primary w-100">
+                                🛒 Adicionar ao carrinho
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
-    {% empty %}
-    <p class="text-muted">Nenhum cupcake cadastrado ainda.</p>
-    {% endfor %}
-</div>
+</section>
+{% endif %}
+
+<!-- Vitrine -->
+<section id="vitrine" class="mb-5">
+    <h2 class="mb-4 text-center">Todos os Cupcakes</h2>
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        {% for c in cupcakes %}
+        <div class="col">
+            <div class="card cupcake-card h-100 border-0 shadow-sm">
+                <div class="cupcake-img-wrapper">
+                    {% if c.imagemUrl %}
+                    <img src="{{ c.imagemUrl.url }}" class="card-img-top" alt="{{ c.nome }}">
+                    {% else %}
+                    <div class="sem-imagem">🧁</div>
+                    {% endif %}
+                </div>
+                <div class="card-body d-flex flex-column">
+                    <h6 class="card-title">{{ c.nome }}</h6>
+                    <p class="text-muted small mb-1">{{ c.sabor }}</p>
+                    <p class="preco mt-auto">R$ {{ c.preco }}</p>
+                    <div class="d-grid gap-2">
+                        <a href="{% url 'catalog:detalhe' c.id %}" class="btn btn-sm btn-outline-primary">
+                            Detalhes
+                        </a>
+                        <form method="post" action="{% url 'cart:adicionar' c.id %}">
+                            {% csrf_token %}
+                            <button class="btn btn-sm btn-primary w-100">
+                                🛒 Adicionar
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <p class="text-muted fs-5">Nenhum cupcake encontrado. 🍰</p>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Paginação -->
+    {% if cupcakes.has_other_pages %}
+    <nav class="mt-5">
+        <ul class="pagination justify-content-center">
+            {% if cupcakes.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ cupcakes.previous_page_number }}">← Anterior</a>
+            </li>
+            {% endif %}
+            <li class="page-item active">
+                <span class="page-link">{{ cupcakes.number }} / {{ cupcakes.paginator.num_pages }}</span>
+            </li>
+            {% if cupcakes.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ cupcakes.next_page_number }}">Próxima →</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+</section>
+
 {% endblock %}

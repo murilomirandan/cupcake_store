@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Meus Pedidos</h1>
+<ul>
+    {% for p in pedidos %}
+    <li>
+        <a href="{% url 'orders:detalhe' p.id %}">{{ p.numeroPedido }}</a>
+        — {{ p.get_status_display }} — R$ {{ p.total }}
+    </li>
+    {% empty %}
+    <li>Você ainda não tem pedidos.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

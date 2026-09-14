@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'accounts',
     'catalog',
     'cart',
+    'orders'
 ]
 
 MIDDLEWARE = [
@@ -63,9 +64,7 @@ ROOT_URLCONF = 'cupcake_store.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            BASE_DIR / 'templates'
-        ],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Pedido {{ pedido.numeroPedido }}</h1>
+<p>Status: <strong>{{ pedido.get_status_display }}</strong></p>
+<p>Total: <strong>R$ {{ pedido.total }}</strong></p>
+<h3>Itens</h3>
+<ul>
+    {% for i in pedido.itens.all %}
+    <li>{{ i.quantidade }}x {{ i.cupcake.nome }} — R$ {{ i.subtotal }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

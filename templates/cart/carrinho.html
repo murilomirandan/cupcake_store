@@ -40,3 +40,6 @@
 <p>Seu carrinho está vazio.</p>
 {% endif %}
 {% endblock %}
+{% if itens %}
+<a href="{% url 'orders:checkout' %}" class="btn btn-success btn-lg">Finalizar Pedido</a>
+{% endif %}
