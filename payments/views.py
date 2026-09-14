@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.http import JsonResponse
+from django.urls import reverse
 from django.utils import timezone
 from datetime import timedelta
 
@@ -17,7 +18,6 @@ def escolher_forma_view(request, pedido_id):
     """US10 - Escolher forma de pagamento"""
     pedido = get_object_or_404(Pedido, id=pedido_id, cliente=request.user)
 
-    # Se já tem pagamento aprovado, não deixa pagar de novo
     if hasattr(pedido, 'pagamento') and pedido.pagamento.status == StatusPagamento.APROVADO:
         messages.info(request, 'Este pedido já foi pago.')
         return redirect('orders:detalhe', pedido_id=pedido.id)
@@ -36,8 +36,10 @@ def escolher_forma_view(request, pedido_id):
             )
             pagamento.processar()
             return redirect('payments:pix', pagamento_id=pagamento.id)
-        else:
-            return redirect('payments:cartao', pedido_id=pedido.id, forma=forma)
+
+        # Cartão (crédito ou débito) — passa a forma via querystring
+        url = reverse('payments:cartao', kwargs={'pedido_id': pedido.id})
+        return redirect(f'{url}?forma={forma}')
 
     return render(request, 'payments/escolher.html', {'pedido': pedido})
 
@@ -66,16 +68,20 @@ def cartao_view(request, pedido_id):
             parcelas=parcelas,
         )
 
-        # Guardamos o número real temporariamente para validar (não persiste)
+        # Guarda número real temporariamente para validar (não persiste)
         pagamento.numeroCarta = numero
         sucesso = pagamento.processar()
 
         if sucesso:
             pedido.alterarStatus(StatusPedido.PAGO)
+
+            # Cria entrega automaticamente
             from delivery.models import Entrega
-            Entrega.objects.get_or_create(pedido=pedido, defaults={
-                'codigoRastreio': f'RAS{pedido.numeroPedido}',
-            })
+            Entrega.objects.get_or_create(
+                pedido=pedido,
+                defaults={'codigoRastreio': f'RAS{pedido.numeroPedido}'},
+            )
+
             messages.success(request, 'Pagamento aprovado! 🎉')
             return redirect('orders:detalhe', pedido_id=pedido.id)
         else:
@@ -101,7 +107,6 @@ def verificar_pix_view(request, pagamento_id):
     """Polling para verificar se o PIX foi pago"""
     pagamento = get_object_or_404(PagamentoPIX, id=pagamento_id)
 
-    # Simulação: considera pago após 10 segundos
     if pagamento.status == StatusPagamento.AGUARDANDO:
         if timezone.now() > pagamento.criado_em + timedelta(seconds=10):
             from .gateways import confirmar_pagamento_pix

@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% block title %}Avaliar Pedido{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h1 class="mb-4">⭐ Avaliar Experiência</h1>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <p class="mb-1 text-muted">Pedido</p>
+                <h5>{{ pedido.numeroPedido }}</h5>
+                <p class="mb-0 text-muted">Total: R$ {{ pedido.total }}</p>
+            </div>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <label class="form-label">Sua nota:</label>
+            <div class="estrelas mb-4">
+                {% for i in "12345" %}
+                <input type="radio" name="nota" value="{{ i }}" id="nota{{ i }}" {% if i=="5" %}checked{% endif %}>
+                <label for="nota{{ i }}">★</label>
+                {% endfor %}
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Comentário (opcional)</label>
+                <textarea name="comentario" class="form-control" rows="4"
+                    placeholder="Conte como foi sua experiência..."></textarea>
+            </div>
+
+            <button class="btn btn-primary btn-lg w-100">Enviar avaliação</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .estrelas {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+        gap: .25rem;
+    }
+
+    .estrelas input {
+        display: none;
+    }
+
+    .estrelas label {
+        font-size: 2.5rem;
+        color: #ddd;
+        cursor: pointer;
+        transition: color .15s;
+    }
+
+    .estrelas input:checked~label,
+    .estrelas label:hover,
+    .estrelas label:hover~label {
+        color: #ffb703;
+    }
+</style>
+{% endblock %}
