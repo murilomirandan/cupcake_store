@@ -35,6 +35,10 @@
                 <p class="fw-bold text-success">R$ {{ c.preco }}</p>
                 <a href="{% url 'catalog:detalhe' c.id %}" class="btn btn-sm btn-outline-primary">Ver detalhes</a>
             </div>
+            <form method="post" action="{% url 'cart:adicionar' c.id %}" class="mt-2">
+                {% csrf_token %}
+                <button class="btn btn-sm btn-primary w-100">Adicionar ao carrinho</button>
+            </form>
         </div>
     </div>
     {% empty %}
