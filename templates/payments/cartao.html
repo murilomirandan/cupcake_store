@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}Pagamento com Cartão{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h1 class="mb-4">💳 Pagamento com Cartão</h1>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <p class="mb-1 text-muted">Pedido {{ pedido.numeroPedido }}</p>
+                <h4 class="text-success mb-0">R$ {{ pedido.total }}</h4>
+            </div>
+        </div>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label class="form-label">Número do cartão</label>
+                <input type="text" name="numeroCarta" class="form-control" placeholder="0000 0000 0000 0000"
+                    maxlength="19" pattern="[\d ]{13,19}" required>
+                <div class="form-text">Digite 16 dígitos (pode incluir espaços).</div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Nome do titular</label>
+                <input type="text" name="nomeTitular" class="form-control" placeholder="Como está no cartão" required>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">Validade</label>
+                    <input type="text" class="form-control" placeholder="MM/AA" maxlength="5">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label class="form-label">CVV</label>
+                    <input type="text" class="form-control" placeholder="123" maxlength="4">
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Parcelas</label>
+                <select name="parcelas" class="form-select">
+                    <option value="1">1x de R$ {{ pedido.total }}</option>
+                    <option value="2">2x sem juros</option>
+                    <option value="3">3x sem juros</option>
+                </select>
+            </div>
+
+            <div class="alert alert-info small">
+                🔒 Ambiente de testes — nenhum dado real é processado.
+                Use qualquer número com 16 dígitos.
+            </div>
+
+            <div class="d-grid">
+                <button class="btn btn-primary btn-lg">Pagar R$ {{ pedido.total }}</button>
+            </div>
+        </form>
+
+        <a href="{% url 'payments:escolher' pedido.id %}" class="btn btn-link mt-3">
+            ← Trocar forma de pagamento
+        </a>
+    </div>
+</div>
+{% endblock %}

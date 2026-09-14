@@ -29,3 +29,14 @@ def remover_view(request, item_id):
     get_cart(request).removerItem(item_id)
     messages.info(request, 'Item removido.')
     return redirect('cart:visualizar')
+
+
+@require_POST
+def atualizar_view(request, item_id):          # 👈 Se faltar, adicione agora
+    item = get_object_or_404(ItemCarrinho, id=item_id)
+    quantidade = int(request.POST.get('quantidade', 1))
+    if quantidade > 0:
+        item.quantidade = quantidade
+        item.save()
+        item.carrinho.calcularTotal()
+    return redirect('cart:visualizar')

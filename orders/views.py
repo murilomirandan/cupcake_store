@@ -10,13 +10,13 @@ from .services import criar_pedido
 def checkout_view(request):
     carrinho = get_cart(request)
     if not carrinho.itens.exists():
-        messages.warning(request, 'Carrinho vazio.')
+        messages.warning(request, 'Seu carrinho está vazio.')
         return redirect('catalog:vitrine')
 
     if request.method == 'POST':
         pedido = criar_pedido(request.user, carrinho)
-        messages.success(request, f'Pedido {pedido.numeroPedido} criado!')
-        return redirect('orders:detalhe', pedido_id=pedido.id)
+        messages.success(request, f'Pedido {pedido.numeroPedido} criado! Escolha o pagamento.')
+        return redirect('payments:escolher', pedido_id=pedido.id)
 
     return render(request, 'orders/checkout.html', {'carrinho': carrinho})
 

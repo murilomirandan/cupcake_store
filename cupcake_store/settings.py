@@ -46,7 +46,8 @@ INSTALLED_APPS = [
     'accounts',
     'catalog',
     'cart',
-    'orders'
+    'orders',
+    'payments',
 ]
 
 MIDDLEWARE = [
@@ -141,3 +142,4 @@ CRISPY_TEMPLATE_PACK = 'bootstrap5'
 LOGIN_URL = 'accounts:login'
 LOGIN_REDIRECT_URL = 'catalog:vitrine'
 
+PIX_EXPIRATION_MINUTES = 15

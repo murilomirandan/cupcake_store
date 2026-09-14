@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}Pagamento PIX{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+        <h1 class="mb-4">📱 Pagamento via PIX</h1>
+
+        <p class="text-muted">
+            Pedido <strong>{{ pagamento.pedido.numeroPedido }}</strong>
+            — R$ <strong>{{ pagamento.valor }}</strong>
+        </p>
+
+        <div class="card shadow-sm p-4 mb-3">
+            {% if pagamento.qrCode %}
+            <img src="data:image/png;base64,{{ pagamento.qrCode }}" alt="QR Code PIX" class="img-fluid mx-auto"
+                style="max-width:250px;">
+            {% endif %}
+        </div>
+
+        <p class="small text-muted">Ou copie o código abaixo:</p>
+        <div class="input-group mb-4">
+            <input type="text" class="form-control" id="pixCode" value="{{ pagamento.codigoPix }}" readonly>
+            <button class="btn btn-outline-secondary" onclick="copiarPix()">Copiar</button>
+        </div>
+
+        <div class="alert alert-warning">
+            ⏳ Aguardando confirmação do pagamento...
+            <div id="statusPix" class="fw-bold mt-1">Verificando...</div>
+        </div>
+
+        <p class="small text-muted">
+            O código expira em 15 minutos. Não feche esta página.
+        </p>
+    </div>
+</div>
+
+<script>
+    function copiarPix() {
+        const input = document.getElementById('pixCode');
+        input.select();
+        navigator.clipboard.writeText(input.value);
+        alert('Código PIX copiado!');
+    }
+
+    // Polling a cada 3 segundos
+    async function verificarPix() {
+        try {
+            const res = await fetch("{% url 'payments:verificar_pix' pagamento.id %}");
+            const data = await res.json();
+
+            if (data.aprovado) {
+                document.getElementById('statusPix').innerHTML =
+                    '<span class="text-success">✔ Pagamento confirmado!</span>';
+                setTimeout(() => window.location.href = data.redirecionar, 1500);
+                return;
+            }
+            document.getElementById('statusPix').textContent = 'Aguardando...';
+        } catch (e) {
+            document.getElementById('statusPix').textContent = 'Erro ao verificar.';
+        }
+        setTimeout(verificarPix, 3000);
+    }
+
+    verificarPix();
+</script>
+{% endblock %}
