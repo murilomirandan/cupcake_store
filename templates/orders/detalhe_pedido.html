@@ -1,12 +1,64 @@
 {% extends 'base.html' %}
 {% block content %}
 <h1>Pedido {{ pedido.numeroPedido }}</h1>
-<p>Status: <strong>{{ pedido.get_status_display }}</strong></p>
-<p>Total: <strong>R$ {{ pedido.total }}</strong></p>
-<h3>Itens</h3>
-<ul>
-    {% for i in pedido.itens.all %}
-    <li>{{ i.quantidade }}x {{ i.cupcake.nome }} — R$ {{ i.subtotal }}</li>
-    {% endfor %}
-</ul>
+
+<div class="row">
+    <div class="col-md-8">
+        <p>Status: <span class="badge bg-primary fs-6">{{ pedido.get_status_display }}</span></p>
+        <p>Data: {{ pedido.dataPedido|date:"d/m/Y H:i" }}</p>
+
+        <h4>Itens</h4>
+        <ul class="list-group mb-4">
+            {% for i in pedido.itens.all %}
+            <li class="list-group-item d-flex justify-content-between">
+                <span>{{ i.quantidade }}x {{ i.cupcake.nome }}</span>
+                <strong>R$ {{ i.subtotal }}</strong>
+            </li>
+            {% endfor %}
+            <li class="list-group-item d-flex justify-content-between bg-light">
+                <strong>Total</strong>
+                <strong class="text-success">R$ {{ pedido.total }}</strong>
+            </li>
+        </ul>
+
+        {% if pedido.status == 'ENTREGUE' %}
+        {% if not pedido.avaliacao %}
+        <a href="{% url 'reviews:avaliar' pedido.id %}" class="btn btn-warning">
+            ⭐ Avaliar este pedido
+        </a>
+        {% else %}
+        <div class="alert alert-success">
+            Você já avaliou com {{ pedido.avaliacao.nota }}/5 ⭐
+        </div>
+        {% endif %}
+        {% endif %}
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">🚚 Entrega</div>
+            <div class="card-body">
+                {% if pedido.entrega %}
+                <p class="mb-1"><strong>Status:</strong>
+                    {{ pedido.entrega.get_status_display }}
+                </p>
+                {% if pedido.entrega.codigoRastreio %}
+                <p class="mb-1"><strong>Rastreio:</strong>
+                    <code>{{ pedido.entrega.codigoRastreio }}</code>
+                </p>
+                {% endif %}
+                {% if pedido.entrega.previsaoEntrega %}
+                <p class="mb-0"><strong>Previsão:</strong>
+                    {{ pedido.entrega.previsaoEntrega|date:"d/m/Y H:i" }}
+                </p>
+                {% endif %}
+                {% else %}
+                <p class="text-muted mb-0">Aguardando pagamento.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<a href="{% url 'orders:meus_pedidos' %}" class="btn btn-link mt-3">← Meus Pedidos</a>
 {% endblock %}

@@ -35,12 +35,17 @@ def processar_pagamento(pagamento):
 
 
 def confirmar_pagamento_pix(pagamento):
-    """Confirma pagamento PIX (chamado por polling/webhook)"""
     from .models import StatusPagamento
     if pagamento.status == StatusPagamento.AGUARDANDO:
         pagamento.status = StatusPagamento.APROVADO
         pagamento.save()
         from orders.models import StatusPedido
         pagamento.pedido.alterarStatus(StatusPedido.PAGO)
+        # Cria entrega
+        from delivery.models import Entrega
+        Entrega.objects.get_or_create(
+            pedido=pagamento.pedido,
+            defaults={'codigoRastreio': f'RAS{pagamento.pedido.numeroPedido}'},
+        )
         return True
     return False

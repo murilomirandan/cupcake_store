@@ -72,6 +72,10 @@ def cartao_view(request, pedido_id):
 
         if sucesso:
             pedido.alterarStatus(StatusPedido.PAGO)
+            from delivery.models import Entrega
+            Entrega.objects.get_or_create(pedido=pedido, defaults={
+                'codigoRastreio': f'RAS{pedido.numeroPedido}',
+            })
             messages.success(request, 'Pagamento aprovado! 🎉')
             return redirect('orders:detalhe', pedido_id=pedido.id)
         else:
