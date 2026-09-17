@@ -9,7 +9,13 @@ class TipoNotificacao(models.TextChoices):
     PROMOCAO = 'PROMOCAO', 'Promoção'
     AVALIACAO = 'AVALIACAO', 'Avaliação'
 
+class NotificacaoQuerySet(models.QuerySet):
+    def nao_lidas(self):
+        return self.filter(lida=False)
 
+    def lidas(self):
+        return self.filter(lida=True)
+    
 class Notificacao(models.Model):
     """US18 - Receber confirmação do pedido"""
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -22,7 +28,8 @@ class Notificacao(models.Model):
     tipo = models.CharField(max_length=30, choices=TipoNotificacao.choices)
     lida = models.BooleanField(default=False)
     criado_em = models.DateTimeField(auto_now_add=True)
-
+    objects = NotificacaoQuerySet.as_manager()
+    
     class Meta:
         ordering = ['-criado_em']
         verbose_name = 'Notificação'

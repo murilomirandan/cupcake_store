@@ -50,3 +50,32 @@ class Administrador(Usuario):
     class Meta:
         verbose_name = 'Administrador'
         verbose_name_plural = 'Administradores'
+
+
+class Endereco(models.Model):
+    """US14 - Informar endereço de entrega"""
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    cliente = models.ForeignKey(
+        Cliente, on_delete=models.CASCADE, related_name='enderecos'
+    )
+    cep = models.CharField(max_length=9)
+    logradouro = models.CharField(max_length=200)
+    numero = models.CharField(max_length=20)
+    complemento = models.CharField(max_length=100, blank=True)
+    bairro = models.CharField(max_length=100)
+    cidade = models.CharField(max_length=100)
+    estado = models.CharField(max_length=2)
+    principal = models.BooleanField(default=False)
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Endereço'
+        verbose_name_plural = 'Endereços'
+        ordering = ['-principal', 'cidade']
+
+    def __str__(self):
+        return f'{self.logradouro}, {self.numero} - {self.cidade}/{self.estado}'
+
+    def validarCEP(self):
+        import re
+        return bool(re.match(r'^\d{5}-?\d{3}$', self.cep))

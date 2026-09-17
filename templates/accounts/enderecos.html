@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Meus Endereços{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">📍 Meus Endereços</h1>
+
+<div class="row">
+    <div class="col-md-7">
+        {% if enderecos %}
+        {% for end in enderecos %}
+        <div class="card mb-2 shadow-sm">
+            <div class="card-body">
+                <p class="mb-1">
+                    <strong>{{ end.logradouro }}, {{ end.numero }}</strong>
+                    {% if end.principal %}<span class="badge bg-primary">Principal</span>{% endif %}
+                </p>
+                <p class="mb-0 text-muted small">
+                    {{ end.bairro }} — {{ end.cidade }}/{{ end.estado }} — CEP {{ end.cep }}
+                </p>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p class="text-muted">Você ainda não tem endereços cadastrados.</p>
+        {% endif %}
+    </div>
+
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">➕ Novo Endereço</div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="mb-2">
+                        <label class="form-label small fw-semibold">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <div class="text-danger small">{{ field.errors|striptags }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button class="btn btn-primary w-100 mt-2">Salvar endereço</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

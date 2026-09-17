@@ -17,7 +17,7 @@ def vitrine_view(request):
             Q(nome__icontains=busca) | Q(sabor__icontains=busca)
         )
 
-    destaques = Cupcake.objects.filter(ativo=True, destaque=True)[:6]
+    destaques = Cupcake.objects.filter(ativo=True, destaque=True)[:4]
 
     paginator = Paginator(cupcakes, 12)
     page = request.GET.get('page')
